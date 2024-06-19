@@ -1,4 +1,4 @@
-import './contentComponent.scss'
+import './content-component.scss'
 import { Product } from '../../models/response-models'
 import logo from '../../logo.svg'
 

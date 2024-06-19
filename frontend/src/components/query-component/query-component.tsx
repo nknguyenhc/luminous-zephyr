@@ -1,6 +1,6 @@
 import { Input } from '@mui/material'
 import { ChangeEvent } from 'react'
-import './queryComponent.scss'
+import './query-component.scss'
 
 type QueryComponentProps = {
   query: string

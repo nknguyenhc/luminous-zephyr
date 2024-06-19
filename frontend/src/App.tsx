@@ -1,6 +1,6 @@
 import './App.scss'
-import { ContentComponent } from './components/contentComponent/contentComponent'
-import { QueryComponent } from './components/queryComponent/queryComponent'
+import { ContentComponent } from './components/content-component/content-component'
+import { QueryComponent } from './components/query-component/query-component'
 import { useState } from 'react'
 
 function App() {
