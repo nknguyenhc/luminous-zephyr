@@ -1,6 +1,5 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Product } from '../models/response-models'
-
 const testProducts: Product[] = [
   {
     id: 1,
@@ -77,18 +76,21 @@ const testProducts: Product[] = [
 export function useProducts() {
   const [products, setProducts] = useState([] as Product[])
 
-  function sendQuery(query: string) {
-    if (!query) {
-      //TODO add error handling
-      return
-    }
+  const sendQuery = useCallback(
+    (query: string) => {
+      if (!query) {
+        //TODO add error handling
+        return
+      }
 
-    // Fake API call
-    setTimeout(() => {
-      setProducts(testProducts)
-      alert(`Query Received: ${query}`)
-    }, 1000)
-  }
+      // Fake API call
+      setTimeout(() => {
+        setProducts(testProducts)
+        alert(`Query Received: ${query}`)
+      }, 1000)
+    },
+    [setProducts]
+  )
 
   return { products, sendQuery }
 }
