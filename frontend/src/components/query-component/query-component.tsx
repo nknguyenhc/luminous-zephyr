@@ -9,7 +9,14 @@ type QueryComponentProps = {
 export function QueryComponent({ sendQuery }: QueryComponentProps) {
   const [query, setQuery] = useState('')
   return (
-    <div className="query-container">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        sendQuery(query)
+        setQuery('')
+      }}
+      className="query-container"
+    >
       <Input
         className="query-input"
         value={query}
@@ -20,15 +27,12 @@ export function QueryComponent({ sendQuery }: QueryComponentProps) {
         disableUnderline={true}
       ></Input>
       <IconButton
-        onClick={() => {
-          sendQuery(query)
-          setQuery('')
-        }}
+        type="submit"
         className="query-send-icon-button"
         aria-label="send"
       >
         <Send />
       </IconButton>
-    </div>
+    </form>
   )
 }
