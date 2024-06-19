@@ -1,21 +1,34 @@
-import { Input } from '@mui/material'
-import { ChangeEvent } from 'react'
+import { IconButton, Input } from '@mui/material'
+import { ChangeEvent, useState } from 'react'
 import './query-component.scss'
+import { Send } from '@mui/icons-material'
 
 type QueryComponentProps = {
-  query: string
-  setQuery: (query: string) => void
+  sendQuery: (query: string) => void
 }
-export function QueryComponent({ query, setQuery }: QueryComponentProps) {
+export function QueryComponent({ sendQuery }: QueryComponentProps) {
+  const [query, setQuery] = useState('')
   return (
-    <Input
-      className="query-input"
-      value={query}
-      onChange={(event: ChangeEvent<HTMLInputElement>) => {
-        setQuery(event.target.value)
-      }}
-      placeholder="Describe the product"
-      disableUnderline={true}
-    ></Input>
+    <div className="query-container">
+      <Input
+        className="query-input"
+        value={query}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+          setQuery(event.target.value)
+        }}
+        placeholder="Describe the product"
+        disableUnderline={true}
+      ></Input>
+      <IconButton
+        onClick={() => {
+          sendQuery(query)
+          setQuery('')
+        }}
+        className="query-send-icon-button"
+        aria-label="send"
+      >
+        <Send />
+      </IconButton>
+    </div>
   )
 }

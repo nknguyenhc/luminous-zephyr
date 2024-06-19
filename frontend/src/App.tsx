@@ -1,14 +1,13 @@
 import './App.scss'
 import { ContentComponent } from './components/content-component/content-component'
 import { QueryComponent } from './components/query-component/query-component'
-import { useState } from 'react'
-
+import { useProducts } from './hooks/useProducts'
 function App() {
-  const [query, setQuery] = useState('')
+  const { products, sendQuery } = useProducts()
   return (
     <div className="main-container">
-      <ContentComponent products={[]} />
-      <QueryComponent query={query} setQuery={setQuery} />
+      <ContentComponent products={products} />
+      <QueryComponent sendQuery={sendQuery} />
     </div>
   )
 }
