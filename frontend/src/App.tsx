@@ -1,7 +1,9 @@
+import { RouterProvider } from 'react-router-dom'
 import './App.scss'
-import { ProductView } from './views/product-view/product-view'
+import { router } from './routes/router'
+
 function App() {
-  return <ProductView />
+  return <RouterProvider router={router} />
 }
 
 export default App
