@@ -1,26 +1,15 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.scss';
-
+import './App.scss'
+import { ContentComponent } from './components/content-component/content-component'
+import { QueryComponent } from './components/query-component/query-component'
+import { useProducts } from './hooks/useProducts'
 function App() {
+  const { products, sendQuery } = useProducts()
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="main-container">
+      <ContentComponent products={products} />
+      <QueryComponent sendQuery={sendQuery} />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
