@@ -1,15 +1,24 @@
-import { RouterProvider } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import './App.scss'
-import { router } from './routes/router'
-import { Authenticator } from './auth/authenticator'
-import { AuthContext } from './context/authContext'
+import { AuthProvider } from './context/authContext'
+import { Home } from './views/home/home'
+import { Login } from './views/login/login'
+import { PrivateRoute } from './routes/private-route'
 
-const authenticator = new Authenticator()
 function App() {
   return (
-    <AuthContext.Provider value={authenticator}>
-      <RouterProvider router={router} />
-    </AuthContext.Provider>
+    <div>
+      <Router>
+        <AuthProvider>
+          <Routes>
+            <Route element={<PrivateRoute />}>
+              <Route path="/" element={<Home />} />
+            </Route>
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </AuthProvider>
+      </Router>
+    </div>
   )
 }
 

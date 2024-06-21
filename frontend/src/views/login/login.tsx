@@ -1,27 +1,17 @@
 import { Button } from '@mui/material'
 import './login.scss'
-import { useCallback, useContext } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '../../context/authContext'
+import { useCallback } from 'react'
+import { useAuth } from '../../context/authContext'
 
 export function Login() {
-  const navigate = useNavigate()
-  const authenticator = useContext(AuthContext)
-  const handleLogin = useCallback(async () => {
-    if (authenticator === null) {
-      throw new Error('Authenticator is null')
+  const user = useAuth()
+
+  const handleLogin = useCallback(() => {
+    if (!user) {
+      throw new Error('useAuth must be used within an AuthProvider')
     }
-
-    const success = await authenticator.authenticate(
-      'userNameInput',
-      'passwordInput'
-    )
-
-    if (success) {
-      navigate('/')
-    }
-  }, [navigate, authenticator])
-
+    user.logIn('username', 'password')
+  }, [user])
   return (
     <Button className="login-center" variant="contained" onClick={handleLogin}>
       Login
