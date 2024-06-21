@@ -23,7 +23,7 @@ export function Login() {
   }, [navigate, authenticator])
 
   return (
-    <Button className="center" variant="contained" onClick={handleLogin}>
+    <Button className="login-center" variant="contained" onClick={handleLogin}>
       Login
     </Button>
   )
