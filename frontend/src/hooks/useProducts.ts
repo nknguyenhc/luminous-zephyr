@@ -77,16 +77,19 @@ export function useProducts() {
   const [products, setProducts] = useState([] as Product[])
 
   const sendQuery = useCallback(
-    (query: string) => {
+    (query: string, setLoading: (loading: boolean) => void) => {
       if (!query) {
         //TODO add error handling
         return
       }
+      
+      setLoading(true)
 
       // Fake API call
       setTimeout(() => {
         setProducts(testProducts)
         alert(`Query Received: ${query}`)
+        setLoading(false)
       }, 1000)
     },
     [setProducts]

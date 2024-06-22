@@ -5,17 +5,20 @@ import { Send } from '@mui/icons-material'
 import { useCallback } from 'react'
 
 type QueryComponentProps = {
-  sendQuery: (query: string) => void
+  sendQuery: (query: string, setLoading: (loading: boolean) => void) => void
+  setLoading: (loading: boolean) => void
+  loading: boolean
 }
-export function QueryComponent({ sendQuery }: QueryComponentProps) {
+export function QueryComponent({ sendQuery, setLoading, loading }: QueryComponentProps) {
   const [query, setQuery] = useState('')
 
   const handleClick = useCallback(
     (input: string) => {
-      sendQuery(input)
+      setLoading(true)
+      sendQuery(input, setLoading)
       setQuery('')
     },
-    [sendQuery]
+    [sendQuery, setLoading]
   )
 
   return (
