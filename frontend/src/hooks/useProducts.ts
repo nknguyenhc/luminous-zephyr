@@ -1,75 +1,77 @@
 import { useState, useCallback } from 'react'
 import { Product } from '../models/response-models'
+import placeholderImage from '../images/default-product-image.png'
+
 const testProducts: Product[] = [
   {
     id: 1,
     name: 'Test Product',
     price: 100,
     description: 'This is a test product',
-    image: '',
+    image: placeholderImage,
   },
   {
     id: 2,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImage,
   },
   {
     id: 3,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImage,
   },
   {
     id: 4,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImage,
   },
   {
     id: 5,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImage
   },
   {
     id: 6,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImage
   },
   {
     id: 7,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImage
   },
   {
     id: 8,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImage
   },
   {
     id: 9,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImage
   },
   {
     id: 10,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImage
   },
 ]
 
