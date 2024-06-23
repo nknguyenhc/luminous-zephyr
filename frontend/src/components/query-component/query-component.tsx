@@ -1,21 +1,21 @@
 import { IconButton, Input } from '@mui/material'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useState, useCallback } from 'react'
 import './query-component.scss'
 import { Send } from '@mui/icons-material'
-import { useCallback } from 'react'
+import { useLoading } from '../../context/loading-context'
 
 type QueryComponentProps = {
-  sendQuery: (query: string, setLoading: (loading: boolean) => void) => void
-  setLoading: (loading: boolean) => void
-  loading: boolean
+  sendQuery: (query: string) => void;
 }
-export function QueryComponent({ sendQuery, setLoading, loading }: QueryComponentProps) {
+
+export function QueryComponent({ sendQuery }: QueryComponentProps) {
   const [query, setQuery] = useState('')
+  const { setLoading } = useLoading();
 
   const handleClick = useCallback(
     (input: string) => {
       setLoading(true)
-      sendQuery(input, setLoading)
+      sendQuery(input)
       setQuery('')
     },
     [sendQuery, setLoading]

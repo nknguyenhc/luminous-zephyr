@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react'
 import { Product } from '../models/response-models'
+import { useLoading } from '../context/loading-context'
+
 const testProducts: Product[] = [
   {
     id: 1,
@@ -75,9 +77,10 @@ const testProducts: Product[] = [
 
 export function useProducts() {
   const [products, setProducts] = useState([] as Product[])
+  const { setLoading } = useLoading();
 
   const sendQuery = useCallback(
-    (query: string, setLoading: (loading: boolean) => void) => {
+    (query: string) => {
       if (!query) {
         //TODO add error handling
         return
@@ -92,7 +95,7 @@ export function useProducts() {
         setLoading(false)
       }, 1000)
     },
-    [setProducts]
+    [setProducts, setLoading]
   )
 
   return { products, sendQuery }
