@@ -9,7 +9,7 @@ interface ContentProps {
 
 export function ContentComponent({ products }: ContentProps) {
   return (
-    <Grid className="content" container direction="row" spacing={2}>
+    <Grid className="content" container direction="row" spacing={0}>
       {products.length === 0 && (
         <img src={logo} className="placeholder" alt="logo" />
       )}

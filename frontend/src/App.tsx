@@ -1,13 +1,23 @@
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import './App.scss'
-import { ContentComponent } from './components/content-component/content-component'
-import { QueryComponent } from './components/query-component/query-component'
-import { useProducts } from './hooks/useProducts'
+import { AuthProvider } from './context/auth-context'
+import { Home } from './views/home/home'
+import { Login } from './views/login/login'
+import { PrivateRoute } from './routes/private-route'
+
 function App() {
-  const { products, sendQuery } = useProducts()
   return (
-    <div className="main-container">
-      <ContentComponent products={products} />
-      <QueryComponent sendQuery={sendQuery} />
+    <div>
+      <Router>
+        <AuthProvider>
+          <Routes>
+            <Route element={<PrivateRoute />}>
+              <Route path="/" element={<Home />} />
+            </Route>
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </AuthProvider>
+      </Router>
     </div>
   )
 }
