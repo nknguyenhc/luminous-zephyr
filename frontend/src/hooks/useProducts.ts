@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react'
 import { Product } from '../models/response-models'
 import placeholderImage from '../images/default-product-image.png'
+import placeholderImageHorizontallyLong from '../images/long-image-test.jpg'
+import placeholderImageVerticallyLong from '../images/long-ruler-image-test.jpg'
 
 const testProducts: Product[] = [
   {
@@ -22,28 +24,28 @@ const testProducts: Product[] = [
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: placeholderImage,
+    image: placeholderImageHorizontallyLong,
   },
   {
     id: 4,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: placeholderImage,
+    image: placeholderImageHorizontallyLong,
   },
   {
     id: 5,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: placeholderImage
+    image: placeholderImageVerticallyLong
   },
   {
     id: 6,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: placeholderImage
+    image: placeholderImageVerticallyLong
   },
   {
     id: 7,
@@ -57,21 +59,21 @@ const testProducts: Product[] = [
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: placeholderImage
+    image: placeholderImageVerticallyLong
   },
   {
     id: 9,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: placeholderImage
+    image: placeholderImageVerticallyLong
   },
   {
     id: 10,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: placeholderImage
+    image: placeholderImageHorizontallyLong
   },
 ]
 

@@ -12,13 +12,16 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ id, image, name, description, price }) => {
   return (
-    <Card className="product-card">
+    <Card 
+      className="product-card"
+    >
       <CardMedia
         component="img"
         alt={name}
-        height="140"
+        height="150"
         image={image}
         title={name}
+        sx={{ objectFit: "contain" }}
         className='product-card-image'
       />
       <CardContent>
