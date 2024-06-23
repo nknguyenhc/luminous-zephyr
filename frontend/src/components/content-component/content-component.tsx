@@ -20,7 +20,7 @@ export function ContentComponent({ products }: ContentProps) {
       )}
       {products.map((product) => {
         return (
-          <Grid item xs={6} key={product.id}>
+          <Grid item xs={6} md={3} key={product.id}>
             <ProductCard
             id={product.id}
             name={product.name}
