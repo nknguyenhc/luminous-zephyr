@@ -1,10 +1,20 @@
 .content {
   overflow-y: auto;
   height: 90%;
+  align-content: flex-start;
+  justify-content: center;
+  width: auto;
 
   .placeholder {
     margin: auto;
     height: 80px;
     width: 80px;
   }
+}
+
+.welcome-message {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-self: center;
 }

@@ -1,5 +1,8 @@
 import { useState, useCallback } from 'react'
 import { Product } from '../models/response-models'
+import placeholderImage from '../images/default-product-image.png'
+import placeholderImageHorizontallyLong from '../images/long-image-test.jpg'
+import placeholderImageVerticallyLong from '../images/long-ruler-image-test.jpg'
 import { useLoading } from '../context/loading-context'
 
 const testProducts: Product[] = [
@@ -8,70 +11,70 @@ const testProducts: Product[] = [
     name: 'Test Product',
     price: 100,
     description: 'This is a test product',
-    image: '',
+    image: placeholderImage,
   },
   {
     id: 2,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImage,
   },
   {
     id: 3,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImageHorizontallyLong,
   },
   {
     id: 4,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImageHorizontallyLong,
   },
   {
     id: 5,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImageVerticallyLong
   },
   {
     id: 6,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImageVerticallyLong
   },
   {
     id: 7,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImage
   },
   {
     id: 8,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImageVerticallyLong
   },
   {
     id: 9,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImageVerticallyLong
   },
   {
     id: 10,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: '',
+    image: placeholderImageHorizontallyLong
   },
 ]
 
