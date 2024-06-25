@@ -1,0 +1,30 @@
+.loading-spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  z-index: 9999; /* Ensure it appears above other content */
+}
+
+// Old default version
+.loading-spinner {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    border: 10px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #000;
+    // animation: spin 1s ease-in-out infinite;
+    animation: colorChange;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

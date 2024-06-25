@@ -3,6 +3,7 @@ import { Product } from '../models/response-models'
 import placeholderImage from '../images/default-product-image.png'
 import placeholderImageHorizontallyLong from '../images/long-image-test.jpg'
 import placeholderImageVerticallyLong from '../images/long-ruler-image-test.jpg'
+import { useLoading } from '../context/loading-context'
 
 const testProducts: Product[] = [
   {
@@ -79,6 +80,7 @@ const testProducts: Product[] = [
 
 export function useProducts() {
   const [products, setProducts] = useState([] as Product[])
+  const { setLoading } = useLoading();
 
   const sendQuery = useCallback(
     (query: string) => {
@@ -86,14 +88,17 @@ export function useProducts() {
         //TODO add error handling
         return
       }
+      
+      setLoading(true)
 
       // Fake API call
       setTimeout(() => {
         setProducts(testProducts)
         alert(`Query Received: ${query}`)
+        setLoading(false)
       }, 1000)
     },
-    [setProducts]
+    [setProducts, setLoading]
   )
 
   return { products, sendQuery }
