@@ -106,9 +106,10 @@ export function useProducts() {
         const data = await response.json()
 
         setProducts(data.products)
-        setLoading(false)
       } catch (error) {
         console.error(error)
+      } finally {
+        setLoading(false)
       }
     },
     [setProducts, setLoading]
