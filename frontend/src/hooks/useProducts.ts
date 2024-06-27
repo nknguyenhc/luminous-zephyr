@@ -39,64 +39,77 @@ const testProducts: Product[] = [
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: placeholderImageVerticallyLong
+    image: placeholderImageVerticallyLong,
   },
   {
     id: 6,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: placeholderImageVerticallyLong
+    image: placeholderImageVerticallyLong,
   },
   {
     id: 7,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: placeholderImage
+    image: placeholderImage,
   },
   {
     id: 8,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: placeholderImageVerticallyLong
+    image: placeholderImageVerticallyLong,
   },
   {
     id: 9,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: placeholderImageVerticallyLong
+    image: placeholderImageVerticallyLong,
   },
   {
     id: 10,
     name: 'Test Product',
     price: 200,
     description: 'This is another test product',
-    image: placeholderImageHorizontallyLong
+    image: placeholderImageHorizontallyLong,
   },
 ]
 
 export function useProducts() {
   const [products, setProducts] = useState([] as Product[])
-  const { setLoading } = useLoading();
+  const { setLoading } = useLoading()
 
   const sendQuery = useCallback(
-    (query: string) => {
+    async (query: string) => {
       if (!query) {
         //TODO add error handling
         return
       }
-      
-      setLoading(true)
 
-      // Fake API call
-      setTimeout(() => {
-        setProducts(testProducts)
-        alert(`Query Received: ${query}`)
+      setLoading(true)
+      try {
+        const response = await fetch(
+          'https://run.mocky.io/v3/3df09685-3dea-4d16-bc6e-8de10bcd94f6?' +
+            new URLSearchParams({ query }).toString(),
+          {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            referrerPolicy: 'no-referrer',
+          }
+        )
+        const data = await response.json()
+
+        setProducts(data.products)
         setLoading(false)
-      }, 1000)
+      } catch (error) {
+        console.error(error)
+      }
     },
     [setProducts, setLoading]
   )
