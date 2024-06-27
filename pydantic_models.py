@@ -1,5 +1,8 @@
 from pydantic import BaseModel
 
+class Prompt(BaseModel):
+    prompt: str
+
 class Product(BaseModel):
     id: int
     title: str

@@ -49,12 +49,14 @@ class ProductPicker:
         # Data cleaning before converting to Product
         description = None if pd.isna(row['description']) else row['description']
         price_sgd = None if pd.isna(row['price_sgd']) else row['price_sgd']
+        number_sold = row['number_sold'] if type(row['number_sold']) == int \
+            else int(row['number_sold'].replace(',', ''))
         return Product(
             id=row['id'],
             title=row['title'],
             description=description,
             price_sgd=price_sgd,
-            number_sold=row['number_sold'],
+            number_sold=number_sold,
             category=row['category'],
         )
 
