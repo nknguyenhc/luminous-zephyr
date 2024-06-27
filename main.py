@@ -1,7 +1,7 @@
 from authlib.integrations.starlette_client import OAuth
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Depends
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from os import environ as env
 from starlette.config import Config
@@ -61,13 +61,12 @@ async def login(request: Request):
 
 @app.get('/token')
 async def token(request: Request):
-    response = RedirectResponse(request.url_for('main'))
     try:
         auth_response = await oauth.auth0.authorize_access_token(request, audience=env.get("AUTH0_AUDIENCE"))
     except Exception:
-        return response
+        return RedirectResponse(request.url_for('main'))
+    response = JSONResponse(auth_response['userinfo'])
     response.set_cookie('token', auth_response['access_token'])
-    response.set_cookie('userinfo', auth_response['userinfo'])
     return response
 
 @app.post('/prompt')
