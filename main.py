@@ -1,16 +1,17 @@
 from authlib.integrations.starlette_client import OAuth
 from dotenv import load_dotenv
-from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, Request, Depends
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from os import environ as env
 from starlette.config import Config
 from starlette.middleware.sessions import SessionMiddleware
-from starlette.requests import Request
 import google.generativeai as genai
 import logging
 from pydantic_models import Prompt, Product
 from model import Model
+from typing import Annotated
+from util import verify_token
 
 load_dotenv()
 
@@ -18,14 +19,14 @@ genai.configure(api_key=env.get('GEMINI_API_KEY'))
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
-app.add_middleware(SessionMiddleware, secret_key=env.get("SECRET_KEY"))
+app.add_middleware(SessionMiddleware, secret_key=env.get('SECRET_KEY')) # required for auth
 
 config = Config('.env')
 oauth = OAuth(config)
 oauth.register(
     'auth0',
     client_kwargs={
-        "scope": "openid profile email",
+        'scope': 'openid profile email',
     },
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration',
 )
@@ -33,7 +34,7 @@ oauth.register(
 
 # Frontend endpoints
 
-app.mount("/static", StaticFiles(directory="./frontend/build/static"), name="static")
+app.mount('/static', StaticFiles(directory='./frontend/build/static'), name='static')
 
 @app.get('/')
 def main():
@@ -47,25 +48,32 @@ def favicon():
 def manifest():
     return FileResponse('./frontend/build/manifest.json')
 
-@app.get("/login")
-async def login(request: Request):
-    redirect_uri = request.url_for("test")
-    print(redirect_uri)
-    return await oauth.auth0.authorize_redirect(
-        request,
-        redirect_uri=redirect_uri
-    )
-
-@app.get("/test")
-async def test(request: Request):
-    token = await oauth.auth0.authorize_access_token(request)
-    user = token['userinfo']
-    return user
 
 # Other endpoints
 
+@app.post('/login')
+async def login(request: Request):
+    return await oauth.auth0.authorize_redirect(
+        request,
+        redirect_uri=request.url_for('token'),
+        audience=env.get("AUTH0_AUDIENCE")
+    )
+
+@app.get('/token')
+async def token(request: Request):
+    response = RedirectResponse(request.url_for('main'))
+    try:
+        auth_response = await oauth.auth0.authorize_access_token(request, audience=env.get("AUTH0_AUDIENCE"))
+    except Exception:
+        return response
+    response.set_cookie('token', auth_response['access_token'])
+    response.set_cookie('userinfo', auth_response['userinfo'])
+    return response
+
 @app.post('/prompt')
-def prompt(body: Prompt) -> list[Product]:
+def prompt(body: Prompt, authenticated: Annotated[bool, Depends(verify_token)]) -> list[Product]:
+    if not authenticated:
+        return RedirectResponse('/')
     model = Model()
     return model.query(body.prompt)
 
