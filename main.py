@@ -7,8 +7,15 @@ from os import environ as env
 from starlette.config import Config
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
+import google.generativeai as genai
+import logging
+from pydantic_models import Prompt, Product
+from model import Model
 
-load_dotenv('.env')
+load_dotenv()
+
+genai.configure(api_key=env.get('GEMINI_API_KEY'))
+logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key=env.get("SECRET_KEY"))
@@ -23,6 +30,8 @@ oauth.register(
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration',
 )
 
+
+# Frontend endpoints
 
 app.mount("/static", StaticFiles(directory="./frontend/build/static"), name="static")
 
@@ -54,6 +63,11 @@ async def test(request: Request):
     return user
 
 # Other endpoints
+
+@app.post('/prompt')
+def prompt(body: Prompt) -> list[Product]:
+    model = Model()
+    return model.query(body.prompt)
 
 @app.exception_handler(404)
 def handle_404(_0, _1):
