@@ -8,7 +8,7 @@ export function Login() {
   const handleLogin = useCallback(async () => {
     // user!.logIn()
     try {
-      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/login`, {
+      const res = await fetch(`http://127.0.0.1:8000/login`, {
         method: 'POST',
         mode: 'no-cors',
       })
