@@ -51,7 +51,7 @@ def manifest():
 
 # Other endpoints
 
-@app.post('/login')
+@app.get('/login')
 async def login(request: Request):
     return await oauth.auth0.authorize_redirect(
         request,
