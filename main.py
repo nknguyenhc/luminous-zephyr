@@ -1,25 +1,28 @@
 from authlib.integrations.starlette_client import OAuth
+from authlib.integrations.base_client.errors import OAuthError
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request, Depends
-from fastapi.responses import FileResponse, RedirectResponse, JSONResponse
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from os import environ as env
+import os
 from starlette.config import Config
 from starlette.middleware.sessions import SessionMiddleware
 import google.generativeai as genai
 import logging
+from functools import wraps
+
 from pydantic_models import Prompt, Product
 from model import Model
-from typing import Annotated
 from util import verify_token
 
 load_dotenv()
 
-genai.configure(api_key=env.get('GEMINI_API_KEY'))
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
-app.add_middleware(SessionMiddleware, secret_key=env.get('SECRET_KEY')) # required for auth
+app.add_middleware(SessionMiddleware, secret_key=os.getenv('SECRET_KEY')) # required for auth
 
 config = Config('.env')
 oauth = OAuth(config)
@@ -28,7 +31,7 @@ oauth.register(
     client_kwargs={
         'scope': 'openid profile email',
     },
-    server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration',
+    server_metadata_url=f'https://{os.getenv("AUTH0_DOMAIN")}/.well-known/openid-configuration',
 )
 
 
@@ -51,31 +54,66 @@ def manifest():
 
 # Other endpoints
 
-@app.post('/login')
+def require_login(f):
+    # Decorator for APIs that require authentication
+    # API function needs to have 'request' parameter
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        verify_token(request=kwargs['request'])
+        return f(*args, **kwargs)
+    return wrapper
+
+@app.get('/login')
 async def login(request: Request):
     return await oauth.auth0.authorize_redirect(
         request,
         redirect_uri=request.url_for('token'),
-        audience=env.get("AUTH0_AUDIENCE")
+        audience=os.getenv("AUTH0_AUDIENCE")
     )
 
 @app.get('/token')
 async def token(request: Request):
-    try:
-        auth_response = await oauth.auth0.authorize_access_token(request, audience=env.get("AUTH0_AUDIENCE"))
-    except Exception:
-        return RedirectResponse(request.url_for('main'))
+    auth_response = await oauth.auth0.authorize_access_token(request, audience=os.getenv("AUTH0_AUDIENCE"))
     response = JSONResponse(auth_response['userinfo'])
     response.set_cookie('token', auth_response['access_token'])
     return response
 
 @app.post('/prompt')
-def prompt(body: Prompt, authenticated: Annotated[bool, Depends(verify_token)]) -> list[Product]:
-    if not authenticated:
-        return RedirectResponse('/')
+@require_login
+def prompt(request: Request, body: Prompt) -> list[Product]:
     model = Model()
     return model.query(body.prompt)
+
+
+# Exception handling
+
+BAD_REQUEST_RESPONSE = JSONResponse(
+    { "message": "The request param or body is malformed." },
+    400
+)
+
+UNAUTHORISED_RESPONSE = JSONResponse(
+    { "message": "You are not authorised to view this page. Please login first!" },
+    401
+)
+    
+ERROR_RESPONSE = JSONResponse( 
+    { "message": "An unexpected error occurred." },
+    500
+)
+
+@app.exception_handler(RequestValidationError)
+async def handle_validation_error(_0, _1):
+    return BAD_REQUEST_RESPONSE
+
+@app.exception_handler(OAuthError)
+async def handle_auth_error(_0, _1):
+    return UNAUTHORISED_RESPONSE
 
 @app.exception_handler(404)
 def handle_404(_0, _1):
     return FileResponse('./frontend/build/index.html')
+
+@app.exception_handler(Exception)
+async def handle_unchecked_error(_0, _1):
+    return ERROR_RESPONSE
