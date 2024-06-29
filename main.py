@@ -30,6 +30,7 @@ oauth.register(
     },
     server_metadata_url=f'https://{env.get("AUTH0_DOMAIN")}/.well-known/openid-configuration',
 )
+model = Model()
 
 
 # Frontend endpoints
@@ -73,7 +74,6 @@ async def token(request: Request):
 def prompt(body: Prompt, authenticated: Annotated[bool, Depends(verify_token)]) -> list[Product]:
     if not authenticated:
         return RedirectResponse('/')
-    model = Model()
     return model.query(body.prompt)
 
 @app.exception_handler(404)
