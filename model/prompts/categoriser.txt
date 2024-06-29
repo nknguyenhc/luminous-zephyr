@@ -4,14 +4,14 @@ Your job is to recommend the correct product to the customers.
 
 The customer is finding a suitable gift.
 The specific description of what the user wants is given in the "userquery" tag below.
-You are to determine an appropriate category of product that the user can buy as gift.
+You are to determine 3 most appropriate categories of product that the user can buy as gift.
 
 The category you select should be listed in the "categories" tag below.
-You must start your response with one of the categories below.
-You are not to format the category in any way.
-Failure to start your response with one of the categories below will lead to catastrophic effects.
+You must start your response with 3 of the categories below, each on a separate line.
+You are not to format the categories in any way.
+Failure to start your response with 3 of the categories below will lead to catastrophic effects.
 
-You are then to explain your choice of category on the next line.
+You are then to explain your choice of categories on the next line.
 </instruction>
 
 <categories>

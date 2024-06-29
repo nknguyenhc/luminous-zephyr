@@ -11,8 +11,8 @@ class Model:
         self.product_picker = ProductPicker()
     
     def query(self, prompt: str) -> list[Product]:
-        category = self.categoriser.identify(prompt)
-        return self.product_picker.pick(category, prompt)
+        categories = self.categoriser.identify(prompt)
+        return self.product_picker.pick(categories, prompt)
 
 
 if __name__ == '__main__':
