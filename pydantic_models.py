@@ -10,3 +10,5 @@ class Product(BaseModel):
     price_sgd: str | None
     number_sold: int
     category: str
+    link: str
+    image_url: str

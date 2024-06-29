@@ -33,6 +33,7 @@ oauth.register(
     },
     server_metadata_url=f'https://{os.getenv("AUTH0_DOMAIN")}/.well-known/openid-configuration',
 )
+model = Model()
 
 
 # Frontend endpoints
@@ -81,7 +82,6 @@ async def token(request: Request):
 @app.post('/prompt')
 @require_login
 def prompt(request: Request, body: Prompt) -> list[Product]:
-    model = Model()
     return model.query(body.prompt)
 
 

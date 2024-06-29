@@ -10,7 +10,7 @@ class ProductPicker:
         with open('model/prompts/product_picker.txt', 'r') as file:
             base_prompt = file.read()
         self.model = GeminiModel(base_prompt.format)
-        self.df = pd.read_csv('data/product_data_categorised.csv')
+        self.df = pd.read_csv('data/product_data_with_links.csv')
         self.df['id'] = self.df.index
         self.logger = logging.getLogger("ProductPicker")
     
@@ -51,6 +51,8 @@ class ProductPicker:
         price_sgd = None if pd.isna(row['price_sgd']) else row['price_sgd']
         number_sold = row['number_sold'] if type(row['number_sold']) == int \
             else int(row['number_sold'].replace(',', ''))
+        link = row["share_link"].strip()
+        image_url = row["first_image_url"].strip()
         return Product(
             id=row['id'],
             title=row['title'],
@@ -58,6 +60,8 @@ class ProductPicker:
             price_sgd=price_sgd,
             number_sold=number_sold,
             category=row['category'],
+            link=link,
+            image_url=image_url
         )
 
 
