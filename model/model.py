@@ -3,16 +3,19 @@ import logging
 from .categoriser import Categoriser
 from .product_picker import ProductPicker
 
-from pydantic_models import Product
+from pydantic_models import Product, Prompt
 
 class Model:
     def __init__(self):
         self.categoriser = Categoriser()
         self.product_picker = ProductPicker()
     
-    def query(self, prompt: str) -> list[Product]:
-        categories = self.categoriser.identify(prompt)
-        return self.product_picker.pick(categories, prompt)
+    def query(self, request: Prompt) -> list[Product]:
+        if request.categories is not None:
+            categories = request.categories
+        else:
+            categories = self.categoriser.identify(request.prompt)
+        return self.product_picker.pick(categories, request.prompt)
 
 
 if __name__ == '__main__':
