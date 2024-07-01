@@ -10,13 +10,30 @@ class ProductPicker:
         with open('model/prompts/product_picker.txt', 'r') as file:
             base_prompt = file.read()
         self.model = GeminiModel(base_prompt.format)
-        self.df = pd.read_csv('data/product_data_with_links.csv')
-        self.df['id'] = self.df.index
+        self._load_data()
         self.logger = logging.getLogger("ProductPicker")
     
-    def pick(self, categories: list[str], prompt: str) -> list[Product]:
-        df, products = self._find_products(categories)
-        self.logger.debug(f"{len(df)} products found in category {categories}")
+    def _load_data(self):
+        self.df = pd.read_csv('data/product_data_with_links.csv')
+        self.df['id'] = self.df.index
+        for i in range(len(self.df)):
+            price = self.df.iloc[i]['price_sgd']
+            if type(price) == str:
+                price = price.replace(',', '')
+            try:
+                self.df.at[i, 'price_lower'] = float(price)
+                self.df.at[i, 'price_upper'] = float(price)
+            except ValueError:
+                lower, upper = price.replace(',', '').split('-')
+                self.df.at[i, 'price_lower'] = float(lower.strip())
+                self.df.at[i, 'price_upper'] = float(upper.strip())
+    
+    def pick(self, categories: list[str], prompt: str, price_range: tuple[float, float]=None) -> list[Product]:
+        df, products = self._find_products(categories, price_range=price_range)
+        self.logger.info(f"{len(df)} products found in category {categories}")
+        if len(df) == 0:
+            self.logger.warning(f"No products found in category {categories}, {price_range=}")
+            return []
         response = self.model.query(prompt=prompt, products=products)
         products_response = response.split('\n')
 
@@ -38,8 +55,10 @@ class ProductPicker:
         self.logger.info(f"Original: {len(df)}, Sorted: {len(sorted_products)}")
         return sorted_products
 
-    def _find_products(self, categories: list[str]) -> tuple[pd.DataFrame, str]:
+    def _find_products(self, categories: list[str], price_range: tuple[float, float]=None) -> tuple[pd.DataFrame, str]:
         df = self.df[self.df['category'].isin(categories)]
+        if price_range is not None:
+            df = df[(df['price_lower'] >= price_range[0]) & (df['price_upper'] <= price_range[1])]
         if len(df) > 50:
             df = df.sample(50)
         df_info = df[['id', 'title', 'description']]
