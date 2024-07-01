@@ -10,13 +10,13 @@ class ProductPicker:
         with open('model/prompts/product_picker.txt', 'r') as file:
             base_prompt = file.read()
         self.model = GeminiModel(base_prompt.format)
-        self.df = pd.read_csv('data/product_data_categorised.csv')
+        self.df = pd.read_csv('data/product_data_with_links.csv')
         self.df['id'] = self.df.index
         self.logger = logging.getLogger("ProductPicker")
     
-    def pick(self, category: str, prompt: str) -> list[Product]:
-        df, products = self._find_products(category)
-        self.logger.debug(f"{len(df)} products found in category {category}")
+    def pick(self, categories: list[str], prompt: str) -> list[Product]:
+        df, products = self._find_products(categories)
+        self.logger.debug(f"{len(df)} products found in category {categories}")
         response = self.model.query(prompt=prompt, products=products)
         products_response = response.split('\n')
 
@@ -29,7 +29,7 @@ class ProductPicker:
             product_id = int(product_id)
             df_row = df[df['id'] == product_id]
             if df_row.empty:
-                self.logger.error(f"Product ID {product_id} not found in category {category}")
+                self.logger.error(f"Product ID {product_id} not found in any category of {categories}")
                 continue
             product = self._to_product(df_row.iloc[0])
             sorted_products.append(product)
@@ -38,8 +38,10 @@ class ProductPicker:
         self.logger.info(f"Original: {len(df)}, Sorted: {len(sorted_products)}")
         return sorted_products
 
-    def _find_products(self, category: str) -> tuple[pd.DataFrame, str]:
-        df = self.df[self.df['category'] == category]
+    def _find_products(self, categories: list[str]) -> tuple[pd.DataFrame, str]:
+        df = self.df[self.df['category'].isin(categories)]
+        if len(df) > 50:
+            df = df.sample(50)
         df_info = df[['id', 'title', 'description']]
         json_string = df_info.to_json(orient='records')
         self.logger.debug(f"Found products: {json_string}")
@@ -51,6 +53,8 @@ class ProductPicker:
         price_sgd = None if pd.isna(row['price_sgd']) else row['price_sgd']
         number_sold = row['number_sold'] if type(row['number_sold']) == int \
             else int(row['number_sold'].replace(',', ''))
+        link = row["share_link"].strip()
+        image_url = row["first_image_url"].strip()
         return Product(
             id=row['id'],
             title=row['title'],
@@ -58,6 +62,8 @@ class ProductPicker:
             price_sgd=price_sgd,
             number_sold=number_sold,
             category=row['category'],
+            link=link,
+            image_url=image_url
         )
 
 
@@ -71,4 +77,4 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     
     picker = ProductPicker()
-    picker.pick('Toys & Games', "A gift for a friend's birthday, who loves to read Harry Potter.")
+    picker.pick(['Toys & Games', 'Stationery', 'Fashion'], "A gift for a friend's birthday, who loves to read Harry Potter.")

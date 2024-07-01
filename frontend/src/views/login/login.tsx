@@ -1,6 +1,6 @@
 import { Button } from '@mui/material'
 import './login.scss'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useAuth } from '../../context/auth-context'
 
 export function Login() {
@@ -15,9 +15,13 @@ export function Login() {
   //     console.log(error)
   //   }
   // }, [])
+
+  console.log(document.cookie)
   return (
-    <a href='http://127.0.0.1:8000/login'>
-        <Button className="login-center" variant="contained">Login</Button>
+    <a href="http://127.0.0.1:8000/login">
+      <Button className="login-center" variant="contained">
+        Login
+      </Button>
     </a>
   )
 }
