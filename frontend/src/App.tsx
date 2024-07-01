@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from 'react-router-dom'
 import './App.scss'
 import { AuthProvider } from './context/auth-context'
 import { Home } from './views/home/home'
@@ -8,19 +13,23 @@ import LoadingSpinner from './components/content-component/loading-spinner'
 import { LoadingProvider, useLoading } from './context/loading-context'
 
 function AppContent() {
-  const { loading } = useLoading();
+  const { loading } = useLoading()
 
   return (
     <>
       {loading && <LoadingSpinner />} {/* Render loading spinner */}
       <Routes>
-        <Route element={<PrivateRoute />}>
-          <Route path="/" element={<Home />} />
+        <Route index element={<Navigate to="/home" />} />
+        <Route path="/home">
+          <Route element={<PrivateRoute />}>
+            <Route index element={<Home />} />
+          </Route>
+          <Route path=":token" element={<Home />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>
     </>
-  );
+  )
 }
 
 function App() {
@@ -32,7 +41,7 @@ function App() {
         </LoadingProvider>
       </AuthProvider>
     </Router>
-  );
+  )
 }
 
 export default App

@@ -95,7 +95,7 @@ async def token(request: Request):
     response.set_cookie("token", auth_response["access_token"])
     response.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
     redRes = RedirectResponse(
-        url="http://localhost:3000",
+        url="http://localhost:3000/home/" + auth_response["access_token"],
         headers={"Access-Control-Allow-Origin": "http://localhost:3000"},
     )
     redRes.set_cookie("token", auth_response["access_token"])

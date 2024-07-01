@@ -15,8 +15,6 @@ export function Login() {
   //     console.log(error)
   //   }
   // }, [])
-
-  console.log(document.cookie)
   return (
     <a href="http://127.0.0.1:8000/login">
       <Button className="login-center" variant="contained">
