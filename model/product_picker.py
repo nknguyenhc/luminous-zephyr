@@ -1,5 +1,6 @@
 import logging
 import pandas as pd
+
 from .prompter import GeminiModel
 
 from pydantic_models import Product
@@ -26,7 +27,7 @@ class ProductPicker:
                 lower, upper = price.replace(',', '').split('-')
                 self.df.at[i, 'price_lower'] = float(lower.strip())
                 self.df.at[i, 'price_upper'] = float(upper.strip())
-
+    
     def pick(self, categories: list[str], prompt: str, price_range: tuple[float, float]=None) -> list[Product]:
         df, products = self._find_products(categories, price_range=price_range)
         self.logger.info(f"{len(df)} products found in category {categories}")
@@ -49,7 +50,8 @@ class ProductPicker:
                 continue
             product = self._to_product(df_row.iloc[0])
             sorted_products.append(product)
-	@@ -55,45 +65,56 @@ def pick(self, categories: list[str], prompt: str, price_range: tuple[float, flo
+
+        self.logger.debug(f"Sorted products: {sorted_products}")
         self.logger.info(f"Original: {len(df)}, Sorted: {len(sorted_products)}")
         return sorted_products
 
