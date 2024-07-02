@@ -23,13 +23,13 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Allows all origins
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["http://localhost:3000"],  # Allows all origins
+#     allow_credentials=True,
+#     allow_methods=["*"],  # Allows all methods
+#     allow_headers=["Cookie"],  # Allows all headers
+# )
 
 app.add_middleware(
     SessionMiddleware, secret_key=os.getenv("SECRET_KEY")
@@ -81,7 +81,7 @@ def require_login(f):
     return wrapper
 
 
-@app.get("/login")
+@app.get("/api/login")
 async def login(request: Request):
     res = await oauth.auth0.authorize_redirect(
         request,
@@ -97,18 +97,17 @@ async def token(request: Request):
     auth_response = await oauth.auth0.authorize_access_token(
         request, audience=os.getenv("AUTH0_AUDIENCE")
     )
-    response = JSONResponse(auth_response["userinfo"])
-    response.set_cookie("token", auth_response["access_token"])
-    response.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
+    # response = JSONResponse(auth_response["userinfo"])
+    # response.set_cookie("token", auth_response["access_token"])
+    # response.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
     redRes = RedirectResponse(
         url="http://localhost:3000/home/" + auth_response["access_token"],
     )
-    redRes.set_cookie("token", auth_response["access_token"])
     return redRes
 
 
-# @require_login
-@app.post("/prompt")
+@app.post("/api/prompt")
+@require_login
 def prompt(request: Request, body: Prompt) -> list[Product]:
     return model.query(body)
 

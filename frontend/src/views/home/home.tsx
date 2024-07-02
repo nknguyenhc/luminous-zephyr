@@ -14,6 +14,7 @@ export function Home() {
   useEffect(() => {
     const token = params.token || user!.token
     user?.authenticate(token!)
+    document.cookie = `token=${token}; domain=localhost; path=/; SameSite: None; Secure;`
   }, [params.token, user])
   return (
     <div className="home-container">

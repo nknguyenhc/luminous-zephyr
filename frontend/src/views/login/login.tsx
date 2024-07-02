@@ -16,7 +16,7 @@ export function Login() {
   //   }
   // }, [])
   return (
-    <a href="http://127.0.0.1:8000/login">
+    <a href="http://127.0.0.1:8000/api/login">
       <Button className="login-center" variant="contained">
         Login
       </Button>
