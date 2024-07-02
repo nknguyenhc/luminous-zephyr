@@ -12,9 +12,8 @@ export function Home() {
   const user = useAuth()
 
   useEffect(() => {
-    if (params.token) {
-      user?.authenticate(params.token)
-    }
+    const token = params.token || user!.token
+    user?.authenticate(token!)
   }, [params.token, user])
   return (
     <div className="home-container">
