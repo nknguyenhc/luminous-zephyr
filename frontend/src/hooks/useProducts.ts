@@ -7,96 +7,87 @@ import { useLoading } from '../context/loading-context'
 
 const testProducts: Product[] = [
   {
-    id: 1,
-    name: 'Test Product',
-    price: 100,
-    description: 'This is a test product',
-    image: placeholderImage,
+    id: 11,
+    title: 'Innovative Product',
+    price_sgd: '250',
+    description: 'A groundbreaking product that changes the game',
+    image_url: placeholderImageVerticallyLong,
+    number_sold: 5,
+    category: 'Technology',
+    link: 'https://www.example.com',
   },
   {
-    id: 2,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImage,
+    id: 12,
+    title: 'Eco Friendly Product',
+    price_sgd: '150',
+    description: 'An eco-friendly product that helps the environment',
+    image_url: placeholderImage,
+    number_sold: 20,
+    category: 'Eco Products',
+    link: 'https://www.ecoexample.com',
   },
   {
-    id: 3,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageHorizontallyLong,
+    id: 13,
+    title: 'Luxury Product',
+    price_sgd: '500',
+    description: 'A luxury product for those who want the finer things',
+    image_url: placeholderImageHorizontallyLong,
+    number_sold: 2,
+    category: 'Luxury',
+    link: 'https://www.luxuryexample.com',
   },
   {
-    id: 4,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageHorizontallyLong,
+    id: 14,
+    title: 'Educational Product',
+    price_sgd: '100',
+    description: 'An educational product that makes learning fun',
+    image_url: placeholderImageVerticallyLong,
+    number_sold: 15,
+    category: 'Education',
+    link: 'https://www.educationalexample.com',
   },
   {
-    id: 5,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageVerticallyLong
-  },
-  {
-    id: 6,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageVerticallyLong
-  },
-  {
-    id: 7,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImage
-  },
-  {
-    id: 8,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageVerticallyLong
-  },
-  {
-    id: 9,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageVerticallyLong
-  },
-  {
-    id: 10,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageHorizontallyLong
+    id: 15,
+    title: 'Fitness Product',
+    price_sgd: '75',
+    description: 'A fitness product to help you achieve your goals',
+    image_url: placeholderImage,
+    number_sold: 30,
+    category: 'Fitness',
+    link: 'https://www.fitnessexample.com',
   },
 ]
 
 export function useProducts() {
   const [products, setProducts] = useState([] as Product[])
-  const { setLoading } = useLoading();
+  const { setLoading } = useLoading()
 
   const sendQuery = useCallback(
-    (query: string) => {
+    async (query: string) => {
       if (!query) {
         //TODO add error handling
         return
       }
-      
-      setLoading(true)
 
-      // Fake API call
-      setTimeout(() => {
-        setProducts(testProducts)
-        alert(`Query Received: ${query}`)
+      setLoading(true)
+      try {
+        const response = await fetch('http://127.0.0.1:8000/prompt', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            prompt: query,
+          }),
+        })
+        const data = await response.json()
+        setProducts(data)
+      } catch (err) {
+        console.error(err)
+      } finally {
         setLoading(false)
-      }, 1000)
+      }
     },
     [setProducts, setLoading]
   )

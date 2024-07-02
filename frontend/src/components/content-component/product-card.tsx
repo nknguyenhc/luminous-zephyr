@@ -1,28 +1,32 @@
-import React from 'react';
-import { Card, CardContent, Typography, CardMedia } from '@mui/material';
+import React from 'react'
+import { Card, CardContent, Typography, CardMedia } from '@mui/material'
 import './product-card.scss'
 
 interface ProductCardProps {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  image: string;
+  id: number
+  name: string
+  price: string | null
+  description: string | null
+  image: string
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ id, image, name, description, price }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  id,
+  image,
+  name,
+  description,
+  price,
+}) => {
   return (
-    <Card 
-      className="product-card"
-    >
+    <Card className="product-card">
       <CardMedia
         component="img"
         alt={name}
         height="150"
         image={image}
         title={name}
-        sx={{ objectFit: "contain" }}
-        className='product-card-image'
+        sx={{ objectFit: 'contain' }}
+        className="product-card-image"
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
@@ -36,7 +40,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ id, image, name, description,
         </Typography>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
 
-export default ProductCard;
+export default ProductCard

@@ -14,7 +14,7 @@ export function ContentComponent({ products }: ContentProps) {
       {products.length === 0 && (
         <div className="welcome-message">
           <img src={logo} className="placeholder" alt="logo" />
-          <h2>Welcome to LostKids.</h2> 
+          <h2>Welcome to LostKids.</h2>
           <h3>From TikTok, Gifts that Rock!</h3>
         </div>
       )}
@@ -22,12 +22,12 @@ export function ContentComponent({ products }: ContentProps) {
         return (
           <Grid item xs={6} md={3} key={product.id}>
             <ProductCard
-            id={product.id}
-            name={product.name}
-            price={product.price}
-            description={product.description}
-            image={product.image}
-          />
+              id={product.id}
+              name={product.title}
+              price={product.price_sgd}
+              description={product.description}
+              image={product.image_url}
+            />
           </Grid>
         )
       })}

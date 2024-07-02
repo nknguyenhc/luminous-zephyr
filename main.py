@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 import os
 from starlette.config import Config
 from starlette.middleware.sessions import SessionMiddleware
+from starlette.middleware.cors import CORSMiddleware
 import google.generativeai as genai
 import logging
 from functools import wraps
@@ -23,8 +24,15 @@ logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
 app.add_middleware(
-    SessionMiddleware,
-    secret_key=os.getenv("SECRET_KEY"),
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+
+app.add_middleware(
+    SessionMiddleware, secret_key=os.getenv("SECRET_KEY")
 )  # required for auth
 
 config = Config(".env")
@@ -80,10 +88,8 @@ async def login(request: Request):
         redirect_uri=request.url_for("token"),
         audience=os.getenv("AUTH0_AUDIENCE"),
     )
-    res.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
 
     return res
-    # res.set_header("Access-Control-Allow-Origin", "*")
 
 
 @app.get("/token")
@@ -96,14 +102,13 @@ async def token(request: Request):
     response.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
     redRes = RedirectResponse(
         url="http://localhost:3000/home/" + auth_response["access_token"],
-        headers={"Access-Control-Allow-Origin": "http://localhost:3000"},
     )
     redRes.set_cookie("token", auth_response["access_token"])
     return redRes
 
 
+# @require_login
 @app.post("/prompt")
-@require_login
 def prompt(request: Request, body: Prompt) -> list[Product]:
     return model.query(body)
 
@@ -121,9 +126,9 @@ UNAUTHORISED_RESPONSE = JSONResponse(
 ERROR_RESPONSE = JSONResponse({"message": "An unexpected error occurred."}, 500)
 
 
-@app.exception_handler(RequestValidationError)
-async def handle_validation_error(_0, _1):
-    return BAD_REQUEST_RESPONSE
+# @app.exception_handler(RequestValidationError)
+# async def handle_validation_error(_0, _1):
+#     return BAD_REQUEST_RESPONSE
 
 
 @app.exception_handler(OAuthError)
