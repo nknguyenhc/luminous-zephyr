@@ -3,7 +3,7 @@ from authlib.integrations.base_client.errors import OAuthError
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 import os
 from starlette.config import Config
@@ -68,7 +68,6 @@ def manifest():
 
 
 # Other endpoints
-
 
 def require_login(f):
     # Decorator for APIs that require authentication
