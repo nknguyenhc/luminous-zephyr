@@ -8,9 +8,11 @@ from fastapi.staticfiles import StaticFiles
 import os
 from starlette.config import Config
 from starlette.middleware.sessions import SessionMiddleware
+from starlette.middleware.cors import CORSMiddleware
 import google.generativeai as genai
 import logging
 from functools import wraps
+import requests
 
 from pydantic_models import Prompt, Product
 from model import Model
@@ -23,6 +25,14 @@ logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key=os.getenv('SECRET_KEY')) # required for auth
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["Cookie"],
+)
 
 config = Config('.env')
 oauth = OAuth(config)
@@ -79,7 +89,16 @@ async def token(request: Request):
     response.set_cookie('token', auth_response['access_token'])
     return response
 
-@app.post('/prompt')
+
+@app.get("/api/userinfo")
+@require_login
+def user_info(request:Request):
+    response = requests.get(f'https://{os.getenv("AUTH0_DOMAIN")}/userinfo',
+                            headers={ 'Authorization': f'Bearer {request.cookies.get("token")}' })
+    return response.json()
+
+
+@app.post("/api/prompt")
 @require_login
 def prompt(request: Request, body: Prompt) -> list[Product]:
     return model.query(body.prompt)
