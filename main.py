@@ -8,7 +8,6 @@ from fastapi.staticfiles import StaticFiles
 import os
 from starlette.config import Config
 from starlette.middleware.sessions import SessionMiddleware
-from starlette.middleware.cors import CORSMiddleware
 import google.generativeai as genai
 import logging
 from functools import wraps
@@ -23,13 +22,6 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["http://localhost:3000"],  # Allows all origins
-#     allow_credentials=True,
-#     allow_methods=["*"],  # Allows all methods
-#     allow_headers=["Cookie"],  # Allows all headers
-# )
 
 app.add_middleware(
     SessionMiddleware, secret_key=os.getenv("SECRET_KEY")
@@ -97,9 +89,6 @@ async def token(request: Request):
     auth_response = await oauth.auth0.authorize_access_token(
         request, audience=os.getenv("AUTH0_AUDIENCE")
     )
-    # response = JSONResponse(auth_response["userinfo"])
-    # response.set_cookie("token", auth_response["access_token"])
-    # response.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
     redRes = RedirectResponse(
         url="http://127.0.0.1:3000/home/", status_code=302
     )
