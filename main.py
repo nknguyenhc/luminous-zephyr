@@ -126,9 +126,9 @@ UNAUTHORISED_RESPONSE = JSONResponse(
 ERROR_RESPONSE = JSONResponse({"message": "An unexpected error occurred."}, 500)
 
 
-# @app.exception_handler(RequestValidationError)
-# async def handle_validation_error(_0, _1):
-#     return BAD_REQUEST_RESPONSE
+@app.exception_handler(RequestValidationError)
+async def handle_validation_error(_0, _1):
+    return BAD_REQUEST_RESPONSE
 
 
 @app.exception_handler(OAuthError)
