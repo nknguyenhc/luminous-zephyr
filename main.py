@@ -101,7 +101,7 @@ def user_info(request:Request):
 @app.post("/api/prompt")
 @require_login
 def prompt(request: Request, body: Prompt) -> list[Product]:
-    return model.query(body.prompt)
+    return model.query(body)
 
 
 # Exception handling

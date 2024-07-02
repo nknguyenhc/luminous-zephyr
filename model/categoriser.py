@@ -29,11 +29,23 @@ class Categoriser:
         self.model = GeminiModel(partial(base_prompt.format, categories='\n'.join(self.categories)))
         self.logger = logging.getLogger("Categoriser")
     
-    def identify(self, prompt: str) -> str:
+    def identify(self, prompt: str) -> list[str]:
         response = self.model.query(prompt=prompt)
-        category = response.split('\n')[0]
-        self.logger.info(f"Identified category: {category}")
-        return category.strip()
+        return self._categories_from_response(response)
+    
+    def _categories_from_response(self, response: str) -> list[str]:
+        response_categories = response.split('\n')
+        categories: list[str] = []
+        for response_category in response_categories:
+            response_category = response_category.strip()
+            if response_category in self.categories:
+                categories.append(response_category)
+            else:
+                self.logger.error(f"Unrecognised category: {response_category}")
+            if len(categories) == 3:
+                break
+        self.logger.info(f"Identified categories: {categories}")
+        return categories
 
 
 if __name__ == '__main__':
