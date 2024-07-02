@@ -4,18 +4,20 @@ import { QueryComponent } from '../../components/query-component/query-component
 import { useProducts } from '../../hooks/useProducts'
 import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
+import { useAuth } from '../../context/auth-context'
 
 export function Home() {
   const { products, sendQuery } = useProducts()
   const params = useParams()
+  const user = useAuth()
   // Gets the token from the URL
   console.log(params)
 
   useEffect(() => {
     if (params.token) {
-      document.cookie = `token=${params.token}`
+      user?.authenticate(params.token)
     }
-  }, [params.token])
+  }, [params.token, user])
   return (
     <div className="home-container">
       <ContentComponent products={products} />
