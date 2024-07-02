@@ -3,8 +3,11 @@ import { useAuth } from '../context/auth-context'
 
 export function PrivateRoute() {
   const user = useAuth()
-  if (!user || !user.token) {
+  if (!user) {
     return <Navigate to="/login" />
   }
+
+  user.authenticate()
+
   return <Outlet />
 }

@@ -24,7 +24,6 @@ function AppContent() {
           <Route element={<PrivateRoute />}>
             <Route index element={<Home />} />
           </Route>
-          <Route path=":token" element={<Home />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>
