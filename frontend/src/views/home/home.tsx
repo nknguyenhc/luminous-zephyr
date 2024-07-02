@@ -10,8 +10,6 @@ export function Home() {
   const { products, sendQuery } = useProducts()
   const params = useParams()
   const user = useAuth()
-  // Gets the token from the URL
-  console.log(params)
 
   useEffect(() => {
     if (params.token) {
