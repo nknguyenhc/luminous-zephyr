@@ -10,7 +10,7 @@ interface ContentProps {
 
 export function ContentComponent({ products }: ContentProps) {
   return (
-    <Grid className="content" container direction="row" spacing={0}>
+    <Grid className="content" container direction="row" spacing={1}>
       {products.length === 0 && (
         <div className="welcome-message">
           <img src={logo} className="placeholder" alt="logo" />
@@ -20,13 +20,16 @@ export function ContentComponent({ products }: ContentProps) {
       )}
       {products.map((product) => {
         return (
-          <Grid item xs={6} md={3} key={product.id}>
+          <Grid item xs={6} md={4} lg={3} key={product.id}>
             <ProductCard
               id={product.id}
-              name={product.title}
-              price={product.price_sgd}
+              title={product.title}
               description={product.description}
-              image={product.image_url}
+              price_sgd={product.price_sgd}
+              number_sold={product.number_sold}
+              category={product.category}
+              link={product.link}
+              image_url={product.image_url}
             />
           </Grid>
         )
