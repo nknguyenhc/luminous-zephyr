@@ -16,7 +16,6 @@ export function QueryComponent({ sendQuery }: QueryComponentProps) {
     (input: string) => {
       setLoading(true)
       sendQuery(input)
-      setQuery('')
     },
     [sendQuery, setLoading]
   )
