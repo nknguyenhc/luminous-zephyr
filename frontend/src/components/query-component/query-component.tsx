@@ -7,7 +7,10 @@ import { useLoading } from '../../context/loading-context'
 interface Query {
   description: string;
   category: string | undefined;
-  priceRange: { lower: number; upper: number }
+  priceRange: {
+    lower: number | string;
+    upper: number | string;
+  };
 }
 
 type QueryComponentProps = {
@@ -38,7 +41,11 @@ const categories = [
 export function QueryComponent({ sendQuery }: QueryComponentProps) {
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined); 
-  const [priceRange, setPriceRange] = useState({ lower: 0, upper: 9999 });
+  const [priceRange, setPriceRange] = useState<
+    { lower: number | string; 
+      upper: number | string 
+    }>
+    ({ lower: '', upper: '' });
   const { setLoading } = useLoading();
 
   const handleClick = useCallback(
@@ -91,18 +98,20 @@ export function QueryComponent({ sendQuery }: QueryComponentProps) {
           className="query-price"
           label="Min Price"
           type="number"
-          value={priceRange.lower}
+          inputProps={{ step: "0.01", min: "0"}}
+          value={priceRange.lower !== undefined ? priceRange.lower : ''}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            setPriceRange({ ...priceRange, lower: parseInt(event.target.value, 10) || 0});
+            setPriceRange({ ...priceRange, lower: event.target.value === '' ? '' : parseFloat(event.target.value) });
           }}
         />
         <TextField
           className="query-price"
           label="Max Price"
           type="number"
-          value={priceRange.upper}
+          inputProps={{ step: "0.01", min: "0" }}
+          value={priceRange.upper !== undefined ? priceRange.upper : ''}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            setPriceRange({ ...priceRange, upper: parseInt(event.target.value, 10) || 0});
+            setPriceRange({ ...priceRange, upper: event.target.value === '' ? '' : parseFloat(event.target.value) });
           }}
         />
       </div>
