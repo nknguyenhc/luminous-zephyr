@@ -2,12 +2,14 @@
   position: relative;
   width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   margin: auto;
+  margin-top: 10px;
 
   .query-input {
     width: 100%;
-    height: 50px;
+    height: 40px;
     border: 1px solid #ccc;
     border-radius: 99px;
     background-color: rgb(231, 231, 231);
@@ -15,8 +17,29 @@
     font-size: 16px;
   }
 
+  .query-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    width: 100%;
+    margin: 20px;
+  
+      .query-category-select {
+        width: 30vw;
+        border-radius: 99px;
+        background-color: rgb(231, 231, 231);
+        flex: 1;
+      }
+  
+      .query-price {
+        flex: 1;
+        width: 100px;
+      }
+  }
+
   .query-send-icon-button {
     position: absolute;
     right: 2%;
   }
 }
+
