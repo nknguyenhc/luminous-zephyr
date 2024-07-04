@@ -31,7 +31,7 @@ export function useProducts() {
         query.priceRange.lower = 0;
       }
       if (!Number.isFinite(query.priceRange.upper)) {
-        query.priceRange.upper = 10000;
+        query.priceRange.upper = 100000;
       }
 
       // Error Handling: Price Range Input
