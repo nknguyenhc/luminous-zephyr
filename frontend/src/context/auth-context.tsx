@@ -12,16 +12,19 @@ type AuthContextType = {
 const AuthContext = createContext(null as AuthContextType | null)
 
 const parseCookie = (cookie: string) => {
-  if(cookie === ''){
+  if (cookie === '') {
     return {}
   }
   return cookie
-  .split(';')
-  .map(v => v.split('='))
-  .reduce((acc, v) => {
-    acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim());
-    return acc;
-  }, {} as { [key: string]: string });
+    .split(';')
+    .map((v) => v.split('='))
+    .reduce(
+      (acc, v) => {
+        acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim())
+        return acc
+      },
+      {} as { [key: string]: string }
+    )
 }
 
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
@@ -51,11 +54,12 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 
   const authenticate = useCallback(async () => {
     const cookieToken = parseCookie(document.cookie).token
-    if(!cookieToken && !token){
+    if (!cookieToken && !token) {
       navigate('/login')
+      return
     }
     // token has been previously authenticated
-    if(cookieToken === token) {
+    if (cookieToken === token) {
       return
     }
 

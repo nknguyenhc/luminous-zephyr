@@ -37,7 +37,7 @@ app.add_middleware(
     allow_headers=["Cookie"],
 )
 
-config = Config('.env')
+config = Config(".env")
 oauth = OAuth(config)
 oauth.register(
     "auth0",
@@ -99,17 +99,20 @@ async def token(request: Request):
     auth_response = await oauth.auth0.authorize_access_token(
         request, audience=os.getenv("AUTH0_AUDIENCE")
     )
-    redRes = RedirectResponse(
-        url="http://127.0.0.1:3000/home/", status_code=302
+    redRes = RedirectResponse(url=f'{os.getenv("FRONTEND_URL")}/home/', status_code=302)
+    redRes.set_cookie(
+        "token", auth_response["access_token"], secure=True, samesite="none"
     )
-    redRes.set_cookie("token", auth_response["access_token"], secure=True, samesite='none')
     return redRes
+
 
 @app.get("/api/userinfo")
 @require_login
-def user_info(request:Request):
-    response = requests.get(f'https://{os.getenv("AUTH0_DOMAIN")}/userinfo',
-                            headers={ 'Authorization': f'Bearer {request.cookies.get("token")}' })
+def user_info(request: Request):
+    response = requests.get(
+        f'https://{os.getenv("AUTH0_DOMAIN")}/userinfo',
+        headers={"Authorization": f'Bearer {request.cookies.get("token")}'},
+    )
     return response.json()
 
 
