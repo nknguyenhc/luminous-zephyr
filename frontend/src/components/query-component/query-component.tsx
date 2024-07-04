@@ -6,7 +6,7 @@ import { useLoading } from '../../context/loading-context'
 
 interface Query {
   description: string;
-  categories: string[];
+  category: string | undefined;
   priceRange: { lower: number; upper: number }
 }
 
@@ -37,8 +37,7 @@ const categories = [
 
 export function QueryComponent({ sendQuery }: QueryComponentProps) {
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState(''); // KEEP IN VIEW
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined); 
   const [priceRange, setPriceRange] = useState({ lower: 0, upper: 9999 });
   const { setLoading } = useLoading();
 
@@ -54,7 +53,7 @@ export function QueryComponent({ sendQuery }: QueryComponentProps) {
     <form
       onSubmit={(e) => {
         e.preventDefault()
-        handleClick({ description, categories: selectedCategories, priceRange })
+        handleClick({ description, category: selectedCategory, priceRange })
       }}
       className="query-container"
     >
@@ -72,10 +71,9 @@ export function QueryComponent({ sendQuery }: QueryComponentProps) {
         <FormControl>
           <InputLabel>Category</InputLabel>
           <Select
-            multiple
-            value={selectedCategories}
-            onChange={(event: SelectChangeEvent<string[]>) => {
-              setSelectedCategories(event.target.value as string[]);
+            value={selectedCategory || ''}
+            onChange={(event: SelectChangeEvent<string>) => {
+              setSelectedCategory(event.target.value || undefined);
             }}
             className='query-category-select'
           >

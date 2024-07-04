@@ -4,7 +4,7 @@ import { useLoading } from '../context/loading-context'
 
 interface Query {
   description: string;
-  categories: string[];
+  category: string | undefined;
   priceRange: { lower: number; upper: number }
 }
 
@@ -14,22 +14,13 @@ export function useProducts() {
 
   const sendQuery = useCallback(
     async (query: Query) => {
-      console.log("Query Category: ", query.categories)
+      console.log("Query Category: ", query.category)
       console.log("Query Price Range: ", query.priceRange)
       
       // Error Handling: Description
       if (!query.description) {
         //TODO add error handling
         alert("Please describe your gift! Thank you!")
-        setLoading(false);
-        return
-      }
-
-      // Error Handling: Category Selection
-      if (query.categories.length === 0) {
-        // No categories selected. For now this is not allowed by the Prompt BaseModel.
-        // Must have at least one category selected.
-        alert("Please choose at least one category. Thank you!")
         setLoading(false);
         return
       }
@@ -52,7 +43,7 @@ export function useProducts() {
           credentials: 'include',
           body: JSON.stringify({
             prompt: query.description,
-            categories: query.categories,
+            categories: query.category ? [query.category] : undefined,
             price_range: query.priceRange,
           }),
         })
