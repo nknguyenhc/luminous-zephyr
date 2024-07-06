@@ -49,6 +49,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
       : `$${prices[0]}`;
   };
 
+  const decodeHtmlText = (rawText: string): string => {
+    const element = document.createElement('textarea');
+    element.innerHTML = rawText;
+    return element.value;
+  };
+
+  const decodedDescription = description ? decodeHtmlText(description) : '';
+
   const handleRedirect = () => {
     window.open(link)
   }
@@ -75,8 +83,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
           
         </Typography>
         <Typography variant="caption" className='product-card-description'>
-          {showFullText ? description : truncateText(description, DESCRIPTION_LENGTH_LIMIT)}
-          {description && description.length > DESCRIPTION_LENGTH_LIMIT && (
+          {showFullText ? decodedDescription : truncateText(decodedDescription, DESCRIPTION_LENGTH_LIMIT)}
+          {decodedDescription && decodedDescription.length > DESCRIPTION_LENGTH_LIMIT && (
             <Button 
               size='small'
               onClick={(e) => {

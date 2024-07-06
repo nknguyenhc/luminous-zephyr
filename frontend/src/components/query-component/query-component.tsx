@@ -83,7 +83,7 @@ export function QueryComponent({ sendQuery }: QueryComponentProps) {
               setSelectedCategory(event.target.value || undefined);
             }}
             onClick={ (clickEvent) => {
-              if ((clickEvent.target as HTMLOptionElement).selected == true) {
+              if ((clickEvent.target as HTMLOptionElement).selected === true) {
                 setSelectedCategory(undefined);
               }
             }}
