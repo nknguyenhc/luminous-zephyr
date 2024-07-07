@@ -3,8 +3,11 @@
 Find the perfect gift in seconds.
 
 ## Inspiration
+We often find ourselves scrolling endlessly searching for the perfect product to get. Whether it is a gift for others or something we genuinely need, it is difficult to find the perfect fit for us. 
+With AI technology and the vast variety of options on the TikTok Shop, there must be a better way to find exactly what we want with just natural spoken language.
 
 ## What it does
+The Luminous Zephyr application aims to provide personalized product recommendations to users based on their natural language search queries using Artificial Intelligence (AI) techniques.
 
 ## How we built it
 
