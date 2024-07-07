@@ -31,7 +31,7 @@ app.add_middleware(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:3000"],
+    allow_origins=[os.getenv("FRONTEND_URL")],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["Cookie"],
@@ -87,8 +87,8 @@ def require_login(f):
 async def login(request: Request):
     res = await oauth.auth0.authorize_redirect(
         request,
-        redirect_uri=request.url_for("token"),
-        audience=os.getenv("AUTH0_AUDIENCE"),
+        redirect_uri=f'{os.getenv["FRONTEND_URL"]}/token',
+        audience=os.getenv("AUTH0_AUDIENCE")
     )
 
     return res
