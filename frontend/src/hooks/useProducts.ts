@@ -48,7 +48,7 @@ export function useProducts() {
       setLoading(true)
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_URL}/api/prompt`,
+          "/api/prompt",
           {
             method: 'POST',
             headers: {
