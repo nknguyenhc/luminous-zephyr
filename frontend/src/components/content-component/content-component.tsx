@@ -10,24 +10,27 @@ interface ContentProps {
 
 export function ContentComponent({ products }: ContentProps) {
   return (
-    <Grid className="content" container direction="row" spacing={0}>
+    <Grid className="content" container direction="row" spacing={1}>
       {products.length === 0 && (
         <div className="welcome-message">
           <img src={logo} className="placeholder" alt="logo" />
-          <h2>Welcome to LostKids.</h2> 
+          <h2>Welcome to LostKids.</h2>
           <h3>From TikTok, Gifts that Rock!</h3>
         </div>
       )}
       {products.map((product) => {
         return (
-          <Grid item xs={6} md={3} key={product.id}>
+          <Grid item xs={6} md={4} lg={3} key={product.id}>
             <ProductCard
-            id={product.id}
-            name={product.name}
-            price={product.price}
-            description={product.description}
-            image={product.image}
-          />
+              id={product.id}
+              title={product.title}
+              description={product.description}
+              price_sgd={product.price_sgd}
+              number_sold={product.number_sold}
+              category={product.category}
+              link={product.link}
+              image_url={product.image_url}
+            />
           </Grid>
         )
       })}

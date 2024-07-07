@@ -1,17 +1,12 @@
 import { Button } from '@mui/material'
 import './login.scss'
-import { useCallback } from 'react'
-import { useAuth } from '../../context/auth-context'
 
 export function Login() {
-  const user = useAuth()
-
-  const handleLogin = useCallback(() => {
-    user!.logIn('username', 'password')
-  }, [user])
   return (
-    <Button className="login-center" variant="contained" onClick={handleLogin}>
-      Login
-    </Button>
+    <a href={`${process.env.REACT_APP_BACKEND_URL}/api/login`}>
+      <Button className="login-center" variant="contained">
+        Login
+      </Button>
+    </a>
   )
 }

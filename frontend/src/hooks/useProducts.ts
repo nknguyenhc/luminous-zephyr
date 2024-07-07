@@ -1,102 +1,77 @@
 import { useState, useCallback } from 'react'
 import { Product } from '../models/response-models'
-import placeholderImage from '../images/default-product-image.png'
-import placeholderImageHorizontallyLong from '../images/long-image-test.jpg'
-import placeholderImageVerticallyLong from '../images/long-ruler-image-test.jpg'
 import { useLoading } from '../context/loading-context'
 
-const testProducts: Product[] = [
-  {
-    id: 1,
-    name: 'Test Product',
-    price: 100,
-    description: 'This is a test product',
-    image: placeholderImage,
-  },
-  {
-    id: 2,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImage,
-  },
-  {
-    id: 3,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageHorizontallyLong,
-  },
-  {
-    id: 4,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageHorizontallyLong,
-  },
-  {
-    id: 5,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageVerticallyLong
-  },
-  {
-    id: 6,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageVerticallyLong
-  },
-  {
-    id: 7,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImage
-  },
-  {
-    id: 8,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageVerticallyLong
-  },
-  {
-    id: 9,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageVerticallyLong
-  },
-  {
-    id: 10,
-    name: 'Test Product',
-    price: 200,
-    description: 'This is another test product',
-    image: placeholderImageHorizontallyLong
-  },
-]
+interface Query {
+  description: string
+  category: string | undefined
+  priceRange: {
+    lower: number | string
+    upper: number | string
+  }
+}
 
 export function useProducts() {
   const [products, setProducts] = useState([] as Product[])
-  const { setLoading } = useLoading();
+  const { setLoading } = useLoading()
 
   const sendQuery = useCallback(
-    (query: string) => {
-      if (!query) {
+    async (query: Query) => {
+      // Error Handling: Description
+      if (!query.description) {
         //TODO add error handling
+        alert('Please describe your gift! Thank you!')
+        setLoading(false)
         return
       }
-      
-      setLoading(true)
 
-      // Fake API call
-      setTimeout(() => {
-        setProducts(testProducts)
-        alert(`Query Received: ${query}`)
+      // Parse Price Range
+      if (!Number.isFinite(query.priceRange.lower)) {
+        query.priceRange.lower = 0
+      }
+      if (!Number.isFinite(query.priceRange.upper)) {
+        query.priceRange.upper = 100000
+      }
+
+      // Error Handling: Price Range Input
+      if (query.priceRange.lower && query.priceRange.upper) {
+        if (query.priceRange.lower > query.priceRange.upper) {
+          alert('Minimum Price must be lower than Maximum Price!')
+          setLoading(false)
+          return
+        }
+      }
+      console.log('Query Category: ', query.category)
+      console.log('Parsed Query Price Range: ', query.priceRange)
+
+      console.log('Loading spinner called.')
+      setLoading(true)
+      try {
+        const response = await fetch(
+          "/api/prompt",
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              prompt: query.description,
+              categories: query.category ? [query.category] : undefined,
+              price_range: {
+                lower: query.priceRange.lower,
+                upper: query.priceRange.upper,
+              },
+            }),
+          }
+        )
+        const data = await response.json()
+        setProducts(data)
+      } catch (err) {
+        console.error(err)
+      } finally {
         setLoading(false)
-      }, 1000)
+      }
     },
     [setProducts, setLoading]
   )

@@ -3,6 +3,22 @@
     border-width: 5px;
     height: 100%;
 }
+.product-card:hover {
+    background-color: rgb(242, 242, 242);
+    cursor: pointer;
+  }
 .product-card-image {
     border-bottom-style: double;
+}
+.product-card-title {
+    color: #da6409; /* Rich Orange */
+    font-weight: bold!important;
+}
+.product-card-description {
+    white-space: break-spaces;
+    overflow-wrap: break-word;
+}
+.product-card-price {
+    color: #ff004f; /* Light red */
+    font-weight: bold!important;
 }

@@ -1,42 +1,107 @@
-import React from 'react';
-import { Card, CardContent, Typography, CardMedia } from '@mui/material';
+import React, { useState } from 'react'
+import { Card, CardContent, Typography, CardMedia, Button } from '@mui/material'
 import './product-card.scss'
+import { styled } from '@mui/system'
 
 interface ProductCardProps {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  image: string;
+  id: number
+  title: string
+  description: string | null
+  price_sgd: string | null
+  number_sold: number
+  category: string
+  link: string
+  image_url: string
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ id, image, name, description, price }) => {
+const CustomCard = styled(Card)``;
+
+const ProductCard: React.FC<ProductCardProps> = ({
+  id,
+  title,
+  description,
+  price_sgd,
+  number_sold,
+  category,
+  link,
+  image_url,
+}) => {
+
+  // useState and Functions to handle description displays
+  const TITLE_LENGTH_LIMIT = 75;
+  const DESCRIPTION_LENGTH_LIMIT = 200;
+  const [showFullText, setShowFullText] = useState(false);
+
+  const toggleText = () => {
+    setShowFullText(!showFullText);
+  };
+
+  const truncateText = (text: string | null, limit: number) => {
+    if (!text) return '';
+    return text.length > limit ? `${text.substring(0, limit)}...` : text;
+  };
+
+  const formatPrice = (price: string | null) => {
+    if (!price) return "Contact Seller for Price";
+    const prices = price.split(' - ');
+    return prices.length === 2
+      ? `$${prices[0]} - $${prices[1]}`
+      : `$${prices[0]}`;
+  };
+
+  const decodeHtmlText = (rawText: string): string => {
+    const element = document.createElement('textarea');
+    element.innerHTML = rawText;
+    return element.value;
+  };
+
+  const decodedDescription = description ? decodeHtmlText(description) : '';
+
+  const handleRedirect = () => {
+    window.open(link)
+  }
+
   return (
-    <Card 
-      className="product-card"
-    >
+    <CustomCard className="product-card" onClick={handleRedirect}>
       <CardMedia
         component="img"
-        alt={name}
-        height="150"
-        image={image}
-        title={name}
-        sx={{ objectFit: "contain" }}
-        className='product-card-image'
+        alt={title}
+        height="200"
+        image={image_url}
+        title={title}
+        sx={{ objectFit: 'contain' }}
+        className="product-card-image"
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          {name}
+        <Typography 
+          gutterBottom 
+          variant="subtitle1" 
+          component="div"
+          className='product-card-title'
+          >
+          {showFullText ? title : truncateText(title, TITLE_LENGTH_LIMIT)}
+          
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {description}
+        <Typography variant="caption" className='product-card-description'>
+          {showFullText ? decodedDescription : truncateText(decodedDescription, DESCRIPTION_LENGTH_LIMIT)}
+          {decodedDescription && decodedDescription.length > DESCRIPTION_LENGTH_LIMIT && (
+            <Button 
+              size='small'
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent event propagation to Card and redirecting users
+                toggleText();
+            }
+          }>
+              {showFullText ? 'Show less' : 'Read more'}
+            </Button>
+          )}
         </Typography>
-        <Typography variant="h6" component="div">
-          {price}
+        <Typography variant="h6" component="div" className='product-card-price'>
+          {formatPrice(price_sgd)}
         </Typography>
       </CardContent>
-    </Card>
-  );
-};
+    </CustomCard>
+  )
+}
 
-export default ProductCard;
+export default ProductCard
