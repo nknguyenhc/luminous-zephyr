@@ -87,7 +87,7 @@ def require_login(f):
 async def login(request: Request):
     res = await oauth.auth0.authorize_redirect(
         request,
-        redirect_uri=f'{os.getenv["FRONTEND_URL"]}/token',
+        redirect_uri=request.url_for('token'),
         audience=os.getenv("AUTH0_AUDIENCE")
     )
 
