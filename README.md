@@ -7,11 +7,14 @@ Try it out: [https://luminous-zephyr.com/](https://luminous-zephyr.com/)
 Youtube: [https://youtu.be/jqGX1rI3F74](https://youtu.be/jqGX1rI3F74)
 
 ## Inspiration
-We often find ourselves scrolling endlessly searching for the perfect product to get. Whether it is a gift for others or something we genuinely need, it is difficult to find the perfect fit for us. 
-With AI technology and the vast variety of options on the TikTok Shop, there must be a better way to find exactly what we want with just natural spoken language.
+We often find ourselves scrolling endlessly searching for the perfect product to get. Whether it is a gift for others or something we genuinely need, we are lost in the plethora of choices and often find ourselves difficult to decide what to purchase.
+
+Shopping for products should not be a hassle! With AI technology and the vast variety of options on the TikTok Shop, there must be a better way to find exactly what we want with just natural spoken language. 
+
+We, Lost Kids, have set on the journey to discover solutions to enhance shopping experiences!
 
 ## What it does
-The Luminous Zephyr application aims to provide personalized product recommendations to users based on their natural language search queries using Artificial Intelligence (AI) techniques.
+The Luminous Zephyr application aims to provide personalized product recommendations to users based on their natural language search queries using Artificial Intelligence (AI) techniques. Users can provide product descriptions to find suitable products. They may also select product Category and filter based on their budget.
 
 ## How we built it
 We used React to build an intuitive frontend interface that interacts with the FastAPI backend. The backend also communicates with a Gemini model which pulls data from defined datasets housed in the backend.
@@ -19,8 +22,16 @@ We used React to build an intuitive frontend interface that interacts with the F
 ## Challenges we ran into
 
 ## Accomplishments that we're proud of
+- Successfully worked with Cookies to manage Authentication.
+- Successfully linked frontend queries with backend and AI Model.
+- Developed an AI Model to recommend suitable products for a given description and category of prompt. DISCLAIMER: All data are strictly for testing and demonstration purposes, with each link visited with 5 seconds interval.
 
 ## What we learned
+- Frontend must consider how backend has been developed to make adjustment where required, while maintaining the User Interface and User Experience to expectations. A compromise between both sides may be required to ensure desired functionality as much as possible.
+- Identify the various considerations for edge cases from user inputs (within reasonable behaviours), and come up with implementations to handle them, such as optional categories, not allowing minimum price to be higher that maximum price, and so on.
+- Considerations to enhance code quality, be it for performance or readability, within the given timeframe.
+- How to solve API Endpoint issues to route the app correctly.
+- How to use Google Cloud Platform (GCP) to deploy Luminous Zephyr app.
 
 ## What's next for luminous-zephyr
 **Better integration with Tiktok shop**
