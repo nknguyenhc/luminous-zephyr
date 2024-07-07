@@ -14,11 +14,11 @@ import logging
 from functools import wraps
 import requests
 
+load_dotenv()
+
 from pydantic_models import Prompt, Product
 from model import Model
 from util import verify_token
-
-load_dotenv()
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 logging.basicConfig(level=logging.INFO)
