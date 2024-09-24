@@ -2,7 +2,7 @@
 
 Find the perfect gift in seconds.
 
-Try it out: [https://luminous-zephyr.com/](https://luminous-zephyr.com/)
+Devpost Submission: [https://devpost.com/software/luminous-zephyr](https://devpost.com/software/luminous-zephyr)
 
 Youtube: [https://youtu.be/jqGX1rI3F74](https://youtu.be/jqGX1rI3F74)
 
